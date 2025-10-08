@@ -84,10 +84,42 @@ int MyString::findSubStr(const char* substr) const {
 
 }
 
+MyString MyString::operator+(const MyString& otherStr) {
+    size_t sumLength = this->length + otherStr.length;
+    char* sumStr = new char[sumLength + 1];
+    strcpy(sumStr,this->data);
+    strcat(sumStr,otherStr.data);
+
+    MyString str(sumStr);
+    delete [] sumStr;
+    return str;
+}
+
+
+
+
+
+
+
 size_t MyString::getSize() const {
     return length;
 };
 
 int MyString::getObjectCount() {
     return objectCount;
+}
+
+MyString operator+(const char* leftStr, const MyString& rightStr) {
+    if (!leftStr) {
+        leftStr = "";
+    }
+    size_t sumLength = strlen(leftStr) + rightStr.length;
+    char* sumStr = new char[sumLength + 1];
+    strcpy(sumStr,leftStr);
+    strcat(sumStr,rightStr.data);
+
+    MyString str(sumStr);
+    delete [] sumStr;
+    return str;
+
 }
