@@ -20,6 +20,13 @@ public:
 
     //Лабороторная работа номер 2: Перегрузка операторов и друж. функции
     MyString operator+(const MyString& otherStr);
+    MyString& operator=(const MyString& otherStr);
+    bool operator==(const MyString& otherStr) const;
+    bool operator!=(const MyString& otherStr) const;
+    bool operator<(const MyString& otherStr) const;
+    bool operator>(const MyString& otherStr) const;
+
+
     //friend метод
     friend MyString operator+(const char* leftStr, const MyString& rightStr);
 

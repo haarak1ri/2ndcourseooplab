@@ -96,8 +96,33 @@ MyString MyString::operator+(const MyString& otherStr) {
 }
 
 
+MyString& MyString::operator=(const MyString& otherStr) {
+    if (this != &otherStr) {
+        delete [] data;
+        length = otherStr.length;
+        data = new char[length + 1];
+        strcpy(data,otherStr.data);
+    }
+    return *this;
 
+}
 
+bool MyString::operator==(const MyString& otherStr) const {
+    if (this->length != otherStr.length || strcmp(this->data,otherStr.data) != 0) return false;
+    return true;
+}
+
+bool MyString::operator!=(const MyString& otherStr) const {
+    return !(*this == otherStr);
+}
+
+bool MyString::operator<(const MyString& otherStr) const {
+    return strcmp(this->data,otherStr.data) < 0;
+}
+
+bool MyString::operator>(const MyString& otherStr) const {
+    return strcmp(this->data,otherStr.data) > 0;
+}
 
 
 

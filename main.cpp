@@ -2,17 +2,15 @@
 
 #include "MyString.h"
 #include <iostream>
+using std::cin;
+using std::cout;
+using std::endl;
 
 int main() {
 
-    MyString str("World");
-    MyString str2("Hello");
-    MyString str3("Lox");
+    MyString s1("Hello"), s2("Hello"), s3("hello"), s4("HELLO");
 
-    MyString s3 = str + " " + str2 + " " + str3;
-    std::cout<<s3.c_str();
-
-
+    cout << "s1 == s4: " << (s1 != s4) << endl;
 
     return 0;
 }
