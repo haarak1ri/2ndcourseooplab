@@ -36,6 +36,14 @@ MyString::MyString(const MyString& otherStr) {
 
 }
 
+MyString::MyString(MyString&& otherStr) noexcept : data(otherStr.data), length(otherStr.length) {
+    otherStr.data = nullptr;
+    otherStr.length = 0;
+    //++objectCount;
+
+
+}
+
 
 
 //Деструктор
@@ -107,6 +115,22 @@ MyString& MyString::operator=(const MyString& otherStr) {
 
 }
 
+MyString& MyString::operator=(MyString&& otherStr) {
+    if (this == &otherStr) return *this;
+    std::cout << "peremesh";
+    delete [] data;
+    data = otherStr.data;
+    length = otherStr.length;
+
+    otherStr.data = nullptr;
+    otherStr.length = 0;
+
+    return *this;
+
+
+
+}
+
 bool MyString::operator==(const MyString& otherStr) const {
     if (this->length != otherStr.length || strcmp(this->data,otherStr.data) != 0) return false;
     return true;
@@ -148,3 +172,88 @@ MyString operator+(const char* leftStr, const MyString& rightStr) {
     return str;
 
 }
+
+ostream& operator<<(ostream& out, const MyString& str) {
+    out << str.data;
+
+
+    return out;
+
+}
+
+ofstream& wBin(ofstream& out, const MyString& str) {
+    out.write((char*)&str.length, sizeof(str.length));
+    out.write(str.data, str.length);
+    return out;
+}
+
+
+istream& operator>>(istream& in, MyString& str) {
+    size_t capacity = 32;
+    size_t length = 0;
+    char* buffer = new char[capacity];
+    char ch;
+
+    while (in.get(ch) && (ch == ' ' || ch == '\n' || ch == '\t')) {}
+
+    if (in) {
+        buffer[length++] = ch;
+    }
+
+    while (in.get(ch) && ch != '\n') {
+        if (length+1 >= capacity) {
+            capacity *= 2;
+            char* newBuffer = new char[capacity];
+            strcpy(newBuffer,buffer);
+            delete[] buffer;
+            buffer = newBuffer;
+
+        }
+
+        buffer[length++] = ch;
+    }
+    buffer[length] = '\0';
+    delete[] str.data;
+    str.data = buffer;
+    str.length = length;
+
+    return in;
+
+}
+
+ifstream& rBin(ifstream& in, MyString& str) {
+    size_t len;
+    in.read((char*)&len, sizeof(len));
+    char* buffer = new char[len + 1];
+    in.read(buffer, len);
+    buffer[len] = '\0';
+    delete[] str.data;
+    str.data = buffer;
+    str.length = len;
+    return in;
+}
+
+MyString readBinObject(std::ifstream& in) {
+    size_t len;
+    in.read((char*)&len, sizeof(len));
+
+    if (!in || in.eof()) return MyString();
+
+    char* buffer = new char[len + 1];
+    in.read(buffer, len);
+    buffer[len] = '\0';
+
+    MyString temp(buffer);
+    delete[] buffer;
+    return temp;
+
+
+}
+
+
+
+
+
+
+
+
