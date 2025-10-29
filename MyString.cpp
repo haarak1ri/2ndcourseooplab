@@ -39,7 +39,7 @@ MyString::MyString(const MyString& otherStr) {
 MyString::MyString(MyString&& otherStr) noexcept : data(otherStr.data), length(otherStr.length) {
     otherStr.data = nullptr;
     otherStr.length = 0;
-    //++objectCount;
+    ++objectCount;
 
 
 }
@@ -117,7 +117,7 @@ MyString& MyString::operator=(const MyString& otherStr) {
 
 MyString& MyString::operator=(MyString&& otherStr) {
     if (this == &otherStr) return *this;
-    std::cout << "peremesh";
+    //std::cout << "peremesh";
     delete [] data;
     data = otherStr.data;
     length = otherStr.length;
@@ -172,7 +172,7 @@ MyString operator+(const char* leftStr, const MyString& rightStr) {
     return str;
 
 }
-
+// из проги в поток или в файл
 ostream& operator<<(ostream& out, const MyString& str) {
     out << str.data;
 
@@ -180,14 +180,14 @@ ostream& operator<<(ostream& out, const MyString& str) {
     return out;
 
 }
+// из проги в двоичный
+void MyString::wBin(ofstream& out) const {
+    out.write((char*)&length, sizeof(length));
+    out.write(data, length);
 
-ofstream& wBin(ofstream& out, const MyString& str) {
-    out.write((char*)&str.length, sizeof(str.length));
-    out.write(str.data, str.length);
-    return out;
 }
 
-
+// из тхт файла в программу либо из потока в программу
 istream& operator>>(istream& in, MyString& str) {
     size_t capacity = 32;
     size_t length = 0;
@@ -221,16 +221,35 @@ istream& operator>>(istream& in, MyString& str) {
 
 }
 
-ifstream& rBin(ifstream& in, MyString& str) {
+// чтение из дв файла
+void MyString::rBin(ifstream& in) {
+    if (!in || in.eof()) {
+
+        delete[] data;
+        data = new char[1];
+        data[0] = '\0';
+        length = 0;
+        return;
+    }
+
     size_t len;
     in.read((char*)&len, sizeof(len));
-    char* buffer = new char[len + 1];
-    in.read(buffer, len);
-    buffer[len] = '\0';
-    delete[] str.data;
-    str.data = buffer;
-    str.length = len;
-    return in;
+
+    if (in && !in.eof()) {
+        char* buffer = new char[len + 1];
+        in.read(buffer, len);
+        buffer[len] = '\0';
+
+        delete[] data;
+        data = buffer;
+        length = len;
+    } else {
+        // Если чтение не удалось, сбрасываем в пустую
+        delete[] data;
+        data = new char[1];
+        data[0] = '\0';
+        length = 0;
+    }
 }
 
 MyString readBinObject(std::ifstream& in) {

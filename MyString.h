@@ -49,17 +49,18 @@ public:
     //Лабороторная работа номер 3: потоки
     friend ostream& operator<<(ostream& out, const MyString& str);
     friend istream& operator>>(istream& in, MyString& str);
-    friend ofstream& wBin(ofstream& out, const MyString& str);
-    friend ifstream& rBin(ifstream& in, MyString& str);
+    virtual void wBin(ofstream& out) const;
+    virtual void rBin(ifstream& in);
 
 
 
 
 
-private:
+protected:
     char* data;
     size_t length;
     static int objectCount;
 };
+
 
 MyString readBinObject(std::ifstream& in);

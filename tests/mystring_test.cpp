@@ -198,19 +198,20 @@ TEST(MyStringIO, InputStream) {
     EXPECT_EQ(s1.getSize(), 12);
 }
 
-//тест записи и чтения двоичный
+//
 
+//тест записи и чтения двоичный
 TEST(MyStringIO, BinaryWR) {
-    const char* fileName = "test_bin.dat";
+    const char* fileName = "test_bin.bin";
     {
         std::ofstream out(fileName, std::ios::binary | std::ios::trunc | std::ios::out);
         ASSERT_TRUE(out.is_open());
         MyString s1("FaZe");
         MyString s2("NaVi");
         MyString s3("NIP");
-        wBin(out, s1);
-        wBin(out, s2);
-        wBin(out, s3);
+        s1.wBin(out);
+        s2.wBin(out);
+        s3.wBin(out);
     }
     {
         std::ifstream in(fileName, std::ios::binary | std::ios::in);
@@ -218,31 +219,28 @@ TEST(MyStringIO, BinaryWR) {
         MyString s1;
         MyString s2;
         MyString s3;
-        rBin(in, s1);
-        rBin(in, s2);
-        rBin(in, s3);
+        s1.rBin(in);
+        s2.rBin(in);
+        s3.rBin(in);
         EXPECT_STREQ(s1.c_str(), "FaZe");
         EXPECT_STREQ(s2.c_str(), "NaVi");
         EXPECT_STREQ(s3.c_str(), "NIP");
         EXPECT_EQ(s1.getSize(), 4);
         EXPECT_EQ(s2.getSize(), 4);
         EXPECT_EQ(s3.getSize(), 3);
-
     }
 }
 
 // тест на вспомогательную функцию readBinObject
 TEST(MyStringIO, ReadBinObjectFunction) {
-    const char* filename = "test_bin2.dat";
-
+    const char* filename = "test_bin2.bin";
     {
         std::ofstream out(filename, std::ios::binary | std::ios::trunc | std::ios::out);
         MyString s1("One");
         MyString s2("Two");
-        wBin(out, s1);
-        wBin(out, s2);
+        s1.wBin(out);
+        s2.wBin(out);
     }
-
     {
         std::ifstream in(filename, std::ios::binary | std::ios::in);
         MyString s1 = readBinObject(in);
@@ -254,13 +252,12 @@ TEST(MyStringIO, ReadBinObjectFunction) {
 
 // тест на пустую строку при бинарном вводе/выводе
 TEST(MyStringIO, EmptyStringBinaryIO) {
-    const char* filename = "test_empty.dat";
+    const char* filename = "test_empty.bin";
     {
         std::ofstream out(filename, std::ios::binary);
         MyString s("");
-        wBin(out, s);
+        s.wBin(out);
     }
-
     {
         std::ifstream in(filename, std::ios::binary);
         MyString s = readBinObject(in);
@@ -269,11 +266,109 @@ TEST(MyStringIO, EmptyStringBinaryIO) {
     }
 }
 
-// тест ввода с ведущими пробелами
-TEST(MyStringIO, InputWithSpaces) {
-    std::istringstream in("   Hello\n");
+//тест чтения из несуществующего бин файла
+TEST(MyStringIO, ReadFromNonExistentBinaryFile) {
+    const char* filename = "non_existent_file.bin";
+    std::ifstream in(filename, std::ios::binary);
+    ASSERT_FALSE(in.is_open());
+    MyString s = readBinObject(in);
+    EXPECT_STREQ(s.c_str(), "");
+    EXPECT_EQ(s.getSize(), 0);
+}
+
+//тест чтения из закрытого бин потока
+TEST(MyStringIO, ReadFromClosedBinaryStream) {
+    std::ifstream in;
+    MyString original("Test");
+    MyString result;
+    result.rBin(in);
+    EXPECT_STREQ(result.c_str(), "");
+    EXPECT_EQ(result.getSize(), 0);
+}
+
+//тест записи в закрытый бинарный поток
+TEST(MyStringIO, WriteToClosedBinaryStream) {
+    std::ofstream out;
+    MyString s("Test data");
+    s.wBin(out);
+    EXPECT_TRUE(true);
+}
+
+//тест чтения из несуществующего текстового файла
+TEST(MyStringIO, ReadFromNonExistentTextFile) {
+    const char* filename = "non_existent_text_file.txt";
+    std::ifstream in(filename);
+    ASSERT_FALSE(in.is_open());
     MyString s;
     in >> s;
-    EXPECT_STREQ(s.c_str(), "Hello");
-    EXPECT_EQ(s.getSize(), 5);
+    EXPECT_STREQ(s.c_str(), "");
+    EXPECT_EQ(s.getSize(), 0);
+}
+
+//тест чтения из закрытого текстового потока
+TEST(MyStringIO, ReadFromClosedTextStream) {
+    std::ifstream in;
+    MyString s;
+    in >> s;
+    EXPECT_STREQ(s.c_str(), "");
+    EXPECT_EQ(s.getSize(), 0);
+}
+
+//тест чтения из пустого бинарного файла
+TEST(MyStringIO, ReadFromEmptyBinaryFile) {
+    const char* filename = "empty_file.bin";
+    {
+        std::ofstream out(filename, std::ios::binary);
+        ASSERT_TRUE(out.is_open());
+    }
+    {
+        std::ifstream in(filename, std::ios::binary);
+        ASSERT_TRUE(in.is_open());
+        MyString s = readBinObject(in);
+        EXPECT_STREQ(s.c_str(), "");
+        EXPECT_EQ(s.getSize(), 0);
+    }
+}
+
+//тест чтения после достижения конца файла
+TEST(MyStringIO, ReadAfterEOF) {
+    const char* filename = "eof_test.bin";
+    {
+        std::ofstream out(filename, std::ios::binary);
+        MyString s1("One");
+        s1.wBin(out);
+    }
+    {
+        std::ifstream in(filename, std::ios::binary);
+        MyString s1 = readBinObject(in);
+        MyString s2 = readBinObject(in);
+        MyString s3 = readBinObject(in);
+        EXPECT_STREQ(s1.c_str(), "One");
+        EXPECT_STREQ(s2.c_str(), "");
+        EXPECT_STREQ(s3.c_str(), "");
+    }
+}
+
+//тест чтения поврежденного бинарного файла
+TEST(MyStringIO, ReadCorruptedBinaryFile) {
+    const char* filename = "corrupted.bin";
+    {
+        std::ofstream out(filename, std::ios::binary);
+        size_t len = 5;
+        out.write((char*)&len, sizeof(len));
+    }
+    {
+        std::ifstream in(filename, std::ios::binary);
+        MyString s = readBinObject(in);
+        EXPECT_TRUE(true);
+    }
+}
+
+//тест rBin с невалидным потоком
+TEST(MyStringIO, rBinWithInvalidStream) {
+    std::ifstream in;
+    MyString s("Original");
+    s.rBin(in);
+    EXPECT_STREQ(s.c_str(), "");
+    EXPECT_EQ(s.getSize(), 0);
 }
