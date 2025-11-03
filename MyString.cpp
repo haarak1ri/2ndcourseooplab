@@ -269,7 +269,10 @@ MyString readBinObject(std::ifstream& in) {
 
 }
 
+void MyString::print() const {
+    std::cout << data << std::endl;
 
+}
 
 
 

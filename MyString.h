@@ -24,7 +24,7 @@ public:
 
 
 
-    ~MyString(); // деструктор
+    virtual ~MyString(); // деструктор
 
     void setString(const char* str) ;//изменение строки
     char* c_str() const; // получение копии строки
@@ -49,8 +49,10 @@ public:
     //Лабороторная работа номер 3: потоки
     friend ostream& operator<<(ostream& out, const MyString& str);
     friend istream& operator>>(istream& in, MyString& str);
+
     virtual void wBin(ofstream& out) const;
     virtual void rBin(ifstream& in);
+    virtual void print() const;
 
 
 

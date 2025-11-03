@@ -7,6 +7,7 @@ public:
     OctString(const char* str);
     OctString(const OctString& otherStr);
     OctString(OctString&& otherStr) noexcept;
+    ~OctString() override;
 
     bool isValidOct() const;
     void setString(const char* str) ;//изменение строки
@@ -21,6 +22,7 @@ public:
 
     void wBin(ofstream& out) const override;
     void rBin(ifstream& in) override;
+    void print() const override;
 
 protected:
     bool valid;

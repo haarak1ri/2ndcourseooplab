@@ -26,6 +26,10 @@ DataOctString::DataOctString(DataOctString&& otherStr) noexcept : OctString(std:
     strcpy(creationDate, otherStr.creationDate);
 }
 
+DataOctString::~DataOctString() {
+
+}
+
 const char* DataOctString::getDate() const {
     return creationDate;
 }
@@ -68,4 +72,8 @@ void DataOctString::wBin(ofstream& out) const {
 void DataOctString::rBin(ifstream& in) {
     OctString::rBin(in);
     in.read(creationDate, sizeof(creationDate));
+}
+
+void DataOctString::print() const {
+    std::cout << data << " " << decValue << " " << creationDate << std::endl;
 }

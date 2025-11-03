@@ -25,6 +25,9 @@ OctString::OctString(OctString&& otherStr) noexcept : MyString(std::move(otherSt
     otherStr.decValue = 0;
 }
 
+OctString::~OctString() {
+}
+
 bool OctString::isValidOct() const {
     if (length == 0) {
         return true;  // пустая строка -  валидная
@@ -164,4 +167,8 @@ void OctString::rBin(ifstream& in) {
     MyString::rBin(in);
     in.read((char*)&valid, sizeof(valid));
     in.read((char*)&decValue, sizeof(decValue));
+}
+
+void OctString::print() const {
+    std::cout << data << " " << decValue << std::endl;
 }
