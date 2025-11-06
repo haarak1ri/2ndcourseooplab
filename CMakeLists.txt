@@ -13,6 +13,8 @@ add_executable(myownlab
         OctString.h
         DataOctString.cpp
         DataOctString.h
+        Tree.cpp
+        Tree.h
 )
 
 # ==== GoogleTest ====
@@ -31,12 +33,16 @@ add_executable(run_tests
         tests/mystring_test.cpp
         tests/octstring_test.cpp
         tests/dataoctstring_test.cpp
+        tests/tree_test.cpp
         MyString.cpp
         MyString.h
         OctString.cpp
         OctString.h
         DataOctString.cpp
         DataOctString.h
+        Tree.cpp
+        Tree.h
+
 )
 
 target_link_libraries(run_tests

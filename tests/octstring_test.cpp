@@ -131,6 +131,27 @@ TEST(OctStringWork, FromDecToDec) {
     EXPECT_EQ(s.toDec(), 64);
 }
 
+TEST(OctStringWork, FromInvDecToStr) {
+    try {
+        OctString s;
+        s.fromDec(-12);
+        FAIL() << "Expected logic_error exception";
+    }
+    catch (std::exception& e) {
+        EXPECT_STREQ(e.what(), "OctString::fromDec():logic_error negative number not allowed");
+    }
+    catch (...) {
+        FAIL() << "Expected fromDec() logic_error exception, but got another exception type";
+    }
+
+}
+
+TEST(OctStringWork, InvalidStringBecomesEmpty) {
+    OctString s("123");   // невалидно, поэтому должно превратиться в ""
+    EXPECT_STREQ(s.c_str(), "");
+    EXPECT_EQ(s.toDec(), 0);
+}
+
 // fromDec(0) даёт пустую строку
 TEST(OctStringWork, FromDecZero) {
     OctString s;
@@ -161,3 +182,4 @@ TEST(OctStringIO, BinaryWriteRead) {
         EXPECT_EQ(s.toDec(), 7);
     }
 }
+

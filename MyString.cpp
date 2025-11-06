@@ -193,7 +193,7 @@ istream& operator>>(istream& in, MyString& str) {
     size_t length = 0;
     char* buffer = new char[capacity];
     char ch;
-
+    if (!in) {throw std::runtime_error("MyString::>>:runtime_error bad input");}
     while (in.get(ch) && (ch == ' ' || ch == '\n' || ch == '\t')) {}
 
     if (in) {
@@ -225,11 +225,12 @@ istream& operator>>(istream& in, MyString& str) {
 void MyString::rBin(ifstream& in) {
     if (!in || in.eof()) {
 
-        delete[] data;
-        data = new char[1];
-        data[0] = '\0';
-        length = 0;
-        return;
+        // delete[] data;
+        // data = new char[1];
+        // data[0] = '\0';
+        // length = 0;
+        // return;
+        throw std::runtime_error("MyString::rBin:runtime_error input stream is empty");
     }
 
     size_t len;
@@ -256,7 +257,7 @@ MyString readBinObject(std::ifstream& in) {
     size_t len;
     in.read((char*)&len, sizeof(len));
 
-    if (!in || in.eof()) return MyString();
+    if (!in || in.eof()) {throw std::runtime_error("MyString::rBin:runtime_error input stream is empty");}
 
     char* buffer = new char[len + 1];
     in.read(buffer, len);

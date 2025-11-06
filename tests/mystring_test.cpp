@@ -271,9 +271,16 @@ TEST(MyStringIO, ReadFromNonExistentBinaryFile) {
     const char* filename = "non_existent_file.bin";
     std::ifstream in(filename, std::ios::binary);
     ASSERT_FALSE(in.is_open());
-    MyString s = readBinObject(in);
-    EXPECT_STREQ(s.c_str(), "");
-    EXPECT_EQ(s.getSize(), 0);
+    try {
+        MyString s  = readBinObject(in);
+        FAIL() << "Expected runtime error";
+    }
+    catch (std::exception& e) {
+        EXPECT_STREQ(e.what(), "MyString::rBin:runtime_error input stream is empty");
+    }
+    catch (...) {
+        FAIL() << "Expected runtime error, but got another exception";
+    }
 }
 
 //тест чтения из закрытого бин потока
@@ -299,10 +306,17 @@ TEST(MyStringIO, ReadFromNonExistentTextFile) {
     const char* filename = "non_existent_text_file.txt";
     std::ifstream in(filename);
     ASSERT_FALSE(in.is_open());
-    MyString s;
-    in >> s;
-    EXPECT_STREQ(s.c_str(), "");
-    EXPECT_EQ(s.getSize(), 0);
+    try {
+        MyString s;
+        in >> s;
+        FAIL() << "Expected runtime error";
+    }
+    catch (std::exception& e) {
+        EXPECT_STREQ(e.what(), "MyString::>>:runtime_error bad input");
+    }
+    catch (...) {
+        FAIL() << "Expected runtime error, but got another exception";
+    }
 }
 
 //тест чтения из закрытого текстового потока
@@ -322,11 +336,18 @@ TEST(MyStringIO, ReadFromEmptyBinaryFile) {
         ASSERT_TRUE(out.is_open());
     }
     {
+        try{
         std::ifstream in(filename, std::ios::binary);
         ASSERT_TRUE(in.is_open());
         MyString s = readBinObject(in);
-        EXPECT_STREQ(s.c_str(), "");
-        EXPECT_EQ(s.getSize(), 0);
+        FAIL() << "Expected runtime error";}
+        catch (std::exception& e) {
+            EXPECT_STREQ(e.what(), "MyString::rBin:runtime_error input stream is empty");
+        }
+        catch (...) {
+            FAIL() << "Expected runtime error, but got another exception";
+        }
+
     }
 }
 
@@ -341,11 +362,19 @@ TEST(MyStringIO, ReadAfterEOF) {
     {
         std::ifstream in(filename, std::ios::binary);
         MyString s1 = readBinObject(in);
-        MyString s2 = readBinObject(in);
-        MyString s3 = readBinObject(in);
         EXPECT_STREQ(s1.c_str(), "One");
-        EXPECT_STREQ(s2.c_str(), "");
-        EXPECT_STREQ(s3.c_str(), "");
+        try {
+            MyString s2 = readBinObject(in);
+            MyString s3 = readBinObject(in);
+            FAIL() << "Expected runtime error";
+        }
+        catch (std::exception& e) {
+            EXPECT_STREQ(e.what(), "MyString::rBin:runtime_error input stream is empty");
+        }
+        catch (...) {
+            FAIL() << "Expected runtime error, but got another exception";
+        }
+
     }
 }
 

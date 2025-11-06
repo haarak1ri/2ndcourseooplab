@@ -99,9 +99,12 @@ OctString& OctString::operator=(OctString&& otherStr) {
 
 int OctString::toDec() {
     int result = 0;
-    if (!valid || length == 0) {
+    if (!valid) {
+        throw std::invalid_argument("OctString::toDec():invalid_argument invalid octal string");
+    }
+    if (length == 0) {
         decValue = 0;
-        return 0;  // пустая строка - 0
+        return 0;
     }
 
 
@@ -117,6 +120,9 @@ void OctString::fromDec(int value) {
     if (value == 0) {
         setString("");  // 0 - пустая строка
         return;
+    }
+    if (value < 0) {
+        throw std::logic_error("OctString::fromDec():logic_error negative number not allowed");
     }
 
     size_t length = 0;

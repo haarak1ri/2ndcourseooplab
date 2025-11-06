@@ -3,6 +3,8 @@
 #include <ostream>
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
+#include <limits>
 
 
 using std::ostream;
