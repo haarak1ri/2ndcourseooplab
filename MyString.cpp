@@ -270,9 +270,10 @@ MyString readBinObject(std::ifstream& in) {
 
 }
 
-void MyString::print() const {
-    std::cout << data << std::endl;
-
+std::string MyString::toString() const {
+    std::ostringstream oss;
+    oss << data;
+    return oss.str();
 }
 
 

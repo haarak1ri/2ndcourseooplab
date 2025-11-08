@@ -175,6 +175,11 @@ void OctString::rBin(ifstream& in) {
     in.read((char*)&decValue, sizeof(decValue));
 }
 
-void OctString::print() const {
-    std::cout << data << " " << decValue << std::endl;
+std::string OctString::toString() const {
+    std::ostringstream oss;
+    oss << MyString::toString();
+    oss << " (dec: " << decValue << ")";
+    if (!valid)
+        oss << " [INVALID]";
+    return oss.str();
 }

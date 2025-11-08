@@ -137,11 +137,14 @@ TEST(OctStringWork, FromInvDecToStr) {
         s.fromDec(-12);
         FAIL() << "Expected logic_error exception";
     }
-    catch (std::exception& e) {
+    catch (std::logic_error& e) {
         EXPECT_STREQ(e.what(), "OctString::fromDec():logic_error negative number not allowed");
     }
+    catch (std::exception& e) {
+        FAIL() << "Expected logic_error exception, but got: " << e.what();
+    }
     catch (...) {
-        FAIL() << "Expected fromDec() logic_error exception, but got another exception type";
+        FAIL() << "Expected fromDec() logic_error exception, but got unknown exception type";
     }
 
 }

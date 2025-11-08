@@ -1,5 +1,6 @@
 #pragma once
 #include "MyString.h"
+#include <sstream>
 
 class OctString : public MyString {
 public:
@@ -22,7 +23,8 @@ public:
 
     void wBin(ofstream& out) const override;
     void rBin(ifstream& in) override;
-    void print() const override;
+    //void print() const override;
+    std::string toString() const override;
 
 protected:
     bool valid;

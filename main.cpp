@@ -10,8 +10,7 @@ using std::ios;
 using std::cerr;
 
 int main() {
-    Tree t;
-    t.print();
+
 
     return 0;
 }

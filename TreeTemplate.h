@@ -7,7 +7,7 @@ public:
     Tree();
     ~Tree();
     void add(const T& value);
-    void printTree() const;
+    void printTree(std::ostream& out) const;
     void remove(const T& key);
     const T* find(const T& value) const;
     void clear();
@@ -26,7 +26,7 @@ private:
     };
     Node* root;
     void add(Node*& current, const T& value);
-    void printTree(Node* node, int level) const;
+    void printTree(std::ostream& out,Node* node, int level) const;
     void remove(Node*& current,const T& key);
     Node* find(Node* current,const T& value) const;
     Node* findMin(Node* current) const;
@@ -60,22 +60,25 @@ void Tree<T>::add(const T& value) {
     add(root, value);
 }
 
+
 template<typename T>
-void Tree<T>::printTree(Node* node, int level) const {
+void Tree<T>::printTree(std::ostream& out) const {
+    printTree(out, root, 0);
+}
+template<typename T>
+void Tree<T>::printTree(std::ostream& out, Node* node, int level) const {
     if (!node) return;
-    std::cout << "Level: " << level << "; ";
-    std::cout << "Value: " << node->data;
-    std::cout << "  Left: " << (node->left ? node->left->data : T{})
-              << "  Right: " << (node->right ? node->right->data : T{}) << std::endl;
 
-    printTree(node->left, level + 1);
-    printTree(node->right, level + 1);
+    out << "Level: " << level
+        << "; Value: " << node->data
+        << "; Left: " << (node->left ? node->left->data : T{})
+        << "; Right: " << (node->right ? node->right->data : T{})
+        << '\n';
+
+    printTree(out, node->left, level + 1);
+    printTree(out, node->right, level + 1);
 }
 
-template<typename T>
-void Tree<T>::printTree() const {
-    printTree(root, 0);
-}
 
 template<typename T>
 typename Tree<T>::Node* Tree<T>::findMin(Node* current) const {

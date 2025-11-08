@@ -5,6 +5,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <limits>
+#include <sstream>
 
 
 using std::ostream;
@@ -54,7 +55,9 @@ public:
 
     virtual void wBin(ofstream& out) const;
     virtual void rBin(ifstream& in);
-    virtual void print() const;
+    //virtual void print() const;
+   virtual std::string toString() const;
+
 
 
 

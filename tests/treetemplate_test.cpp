@@ -5,7 +5,7 @@
 
 TEST(TreeTemplate, EmptyTreePrint) {
     Tree<int> t;
-    EXPECT_NO_THROW(t.printTree());
+    EXPECT_NO_THROW(t.printTree(std::cout));
 }
 
 
@@ -47,7 +47,70 @@ TEST(TreeTemplate, RemoveElements) {
     t.remove(6);
     EXPECT_EQ(t.find(6), nullptr);
 
-    EXPECT_NO_THROW(t.printTree());
+    EXPECT_NO_THROW(t.printTree(std::cout));
+}
+
+TEST(TreeTemplate, FileOutput) {
+    Tree<int> t;
+
+    t.add(50);
+    t.add(30);
+    t.add(70);
+    t.add(20);
+    t.add(40);
+    t.add(60);
+    t.add(80);
+
+    const std::string filename = "tree_output.txt";
+
+    {
+        std::ofstream fout(filename);
+        ASSERT_TRUE(fout.is_open());
+        t.printTree(fout);
+    }
+
+    std::ifstream fin(filename);
+    ASSERT_TRUE(fin.is_open());
+
+    std::string firstLine;
+    std::getline(fin, firstLine);
+    EXPECT_FALSE(firstLine.empty());
+
+    fin.close();
+
+
+}
+
+TEST(TreeTemplate, FileOutputWithStrings) {
+    Tree<MyString> t;
+
+    t.add(MyString("apple"));
+    t.add(MyString("banana"));
+    t.add(MyString("cherry"));
+    t.add(MyString("date"));
+    t.add(MyString("elderberry"));
+
+    const std::string filename = "tree_string_output.txt";
+
+    {
+        std::ofstream fout(filename);
+        ASSERT_TRUE(fout.is_open());
+        t.printTree(fout);
+    }
+
+    std::ifstream fin(filename);
+    ASSERT_TRUE(fin.is_open());
+
+    std::string content;
+    std::string line;
+    while (std::getline(fin, line)) {
+        content += line + "\n";
+    }
+    EXPECT_FALSE(content.empty());
+
+    fin.close();
+
+
 }
 
 
@@ -93,7 +156,7 @@ TEST(TreeTemplate, DuplicateInsertGoesRight) {
     const int* found = t.find(5);
     ASSERT_NE(found, nullptr);
     EXPECT_EQ(*found, 5);
-    t.printTree();
+    t.printTree(std::cout);
 }
 
 
@@ -114,7 +177,7 @@ TEST(TreeTemplate, PrintVariousTypes) {
     ts.add(MyString("beta"));
     ts.add(MyString("gamma"));
 
-    EXPECT_NO_THROW(ti.printTree());
-    EXPECT_NO_THROW(td.printTree());
-    EXPECT_NO_THROW(ts.printTree());
+    EXPECT_NO_THROW(ti.printTree(std::cout));
+    EXPECT_NO_THROW(td.printTree(std::cout));
+    EXPECT_NO_THROW(ts.printTree(std::cout));
 }

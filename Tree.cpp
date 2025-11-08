@@ -35,27 +35,40 @@ void Tree::add(MyString* obj) {
     add(root, obj);
 }
 
-void Tree::printTree(Node* node, int level) const {
-    if (!node) return;
-
-
-    const char* leftVal = (node->left) ? node->left->data->c_str() : "";
-    const char* rightVal = (node->right) ? node->right->data->c_str() : "";
-
-
-    std::cout << "Level: " << level << "; ";
-    std::cout << "Value: ";
-    node->data->print();// для каждого типа объекта свой print - полиморфизм
-    std::cout << "  Left: " << (node->left ? leftVal : "null")
-              << "  Right: " << (node->right ? rightVal : "null") << std::endl;
-
-
-    printTree(node->left, level + 1);
-    printTree(node->right, level + 1);
+// void Tree::printTree(Node* node, int level) const {
+//     if (!node) return;
+//
+//
+//     const char* leftVal = (node->left) ? node->left->data->c_str() : "";
+//     const char* rightVal = (node->right) ? node->right->data->c_str() : "";
+//
+//
+//     std::cout << "Level: " << level << "; ";
+//     std::cout << "Value: ";
+//     node->data->toString();// для каждого типа объекта свой print - полиморфизм
+//     std::cout << "  Left: " << (node->left ? leftVal : "null")
+//               << "  Right: " << (node->right ? rightVal : "null") << std::endl;
+//
+//
+//     printTree(node->left, level + 1);
+//     printTree(node->right, level + 1);
+// }
+//
+void Tree::printTree(std::ostream& out) const {
+    printTree(out, root, 0);
 }
 
-void Tree::printTree() const {
-    printTree(root, 0);
+void Tree::printTree(std::ostream& out, Node* node, int level) const {
+    if (!node) return;
+
+    out << "Level: " << level
+        << "; Value: " << node->data->toString()
+        << "; Left: " << (node->left ? node->left->data->toString() : "null")
+        << "; Right: " << (node->right ? node->right->data->toString() : "null")
+        << '\n';
+
+    printTree(out, node->left, level + 1);
+    printTree(out, node->right, level + 1);
 }
 
 

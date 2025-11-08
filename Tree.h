@@ -12,7 +12,7 @@ public:
     Tree();
     ~Tree();
     void add(MyString* obj);
-    void printTree() const;
+    void printTree(std::ostream& out) const;
     void remove(const MyString& key);
     MyString* find(const MyString& obj) const;
     void clear();
@@ -31,7 +31,7 @@ private:
     Node* root;
 
     void add(Node*& current,MyString* obj);
-    void printTree(Node* node, int level) const;
+    void printTree(std::ostream& out,Node* node, int level) const;
     void remove(Node*& current,const MyString& key);
     Node* find(Node* current,const MyString& obj) const;
     Node* findMin(Node* current) const;

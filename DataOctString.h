@@ -3,6 +3,7 @@
 #include <cstring>
 #include <ctime>
 #include <cstdio>
+#include <sstream>
 
 class DataOctString : public OctString {
 public:
@@ -21,8 +22,8 @@ public:
 
     void wBin(ofstream& out) const override;
     void rBin(ifstream& in) override;
-    void print() const override;
-
+    //void print() const override;
+    std::string toString() const override;
 private:
     char creationDate[20];
 };

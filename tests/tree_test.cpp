@@ -6,7 +6,7 @@
 
 TEST(TreeWork,EmptyTreePrint) {
     Tree t;
-    EXPECT_NO_THROW(t.printTree());
+    EXPECT_NO_THROW(t.printTree(std::cout));
 }
 
 TEST(Tree, AddDifferentObjects) {
@@ -19,12 +19,35 @@ TEST(Tree, AddDifferentObjects) {
     EXPECT_NO_THROW(t.add(&s1));
     EXPECT_NO_THROW(t.add(&s2));
     EXPECT_NO_THROW(t.add(&s3));
-    t.printTree();
+    t.printTree(std::cout);
 
     EXPECT_STREQ(t.find("hello")->c_str(), "hello");
     EXPECT_STREQ(t.find("0123")->c_str(), "0123");
     EXPECT_STREQ(t.find("045")->c_str(), "045");
 }
+
+
+TEST(Tree, FileOutput) {
+    Tree t;
+    MyString s1("A");
+    OctString s2("012");
+    DataOctString s3("077");
+
+    t.add(&s1);
+    t.add(&s2);
+    t.add(&s3);
+
+    const std::string filename = "tree_output.txt";
+    {
+        std::ofstream fout(filename);
+        ASSERT_TRUE(fout.is_open());
+        t.printTree(fout);
+    }
+
+
+}
+
+
 
 //проверика на работоспособность octstring
 TEST(Tree, OctTest) {
@@ -69,7 +92,7 @@ TEST(Tree,REMOVE) {
     t.remove(s3); // 1 потомок
     EXPECT_EQ(t.find(s3), nullptr);
 
-    t.printTree();
+    t.printTree(std::cout);
 
 }
 
@@ -119,5 +142,5 @@ TEST(Tree, PolymorphismCheckPrint) {
 
 
 
-    EXPECT_NO_THROW(t.printTree());
+    EXPECT_NO_THROW(t.printTree(std::cout));
 }

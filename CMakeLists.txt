@@ -16,6 +16,7 @@ add_executable(myownlab
         Tree.cpp
         Tree.h
         TreeTemplate.h
+        StlAnalysis.h
 )
 
 # ==== GoogleTest ====

@@ -74,6 +74,9 @@ void DataOctString::rBin(ifstream& in) {
     in.read(creationDate, sizeof(creationDate));
 }
 
-void DataOctString::print() const {
-    std::cout << data << " " << decValue << " " << creationDate << std::endl;
+std::string DataOctString::toString() const {
+    std::ostringstream oss;
+    oss << OctString::toString();
+    oss << " | created: " << creationDate;
+    return oss.str();
 }

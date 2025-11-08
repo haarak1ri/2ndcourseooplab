@@ -272,14 +272,17 @@ TEST(MyStringIO, ReadFromNonExistentBinaryFile) {
     std::ifstream in(filename, std::ios::binary);
     ASSERT_FALSE(in.is_open());
     try {
-        MyString s  = readBinObject(in);
+        MyString s = readBinObject(in);
         FAIL() << "Expected runtime error";
     }
-    catch (std::exception& e) {
+    catch (const std::runtime_error& e) {
         EXPECT_STREQ(e.what(), "MyString::rBin:runtime_error input stream is empty");
     }
+    catch (const std::exception& e) {
+        FAIL() << "Expected runtime_error, but got: " << e.what();
+    }
     catch (...) {
-        FAIL() << "Expected runtime error, but got another exception";
+        FAIL() << "Expected runtime error, but got unknown exception";
     }
 }
 
@@ -311,11 +314,14 @@ TEST(MyStringIO, ReadFromNonExistentTextFile) {
         in >> s;
         FAIL() << "Expected runtime error";
     }
-    catch (std::exception& e) {
+    catch (const std::runtime_error& e) {
         EXPECT_STREQ(e.what(), "MyString::>>:runtime_error bad input");
     }
+    catch (const std::exception& e) {
+        FAIL() << "Expected runtime_error, but got: " << e.what();
+    }
     catch (...) {
-        FAIL() << "Expected runtime error, but got another exception";
+        FAIL() << "Expected runtime error, but got unknown  exception";
     }
 }
 
@@ -341,11 +347,14 @@ TEST(MyStringIO, ReadFromEmptyBinaryFile) {
         ASSERT_TRUE(in.is_open());
         MyString s = readBinObject(in);
         FAIL() << "Expected runtime error";}
-        catch (std::exception& e) {
+        catch (const std::runtime_error& e) {
             EXPECT_STREQ(e.what(), "MyString::rBin:runtime_error input stream is empty");
         }
+        catch (std::exception& e) {
+            FAIL() << "Expected runtime_error, but got: ," << e.what();
+        }
         catch (...) {
-            FAIL() << "Expected runtime error, but got another exception";
+            FAIL() << "Expected runtime error, but got unknown exception";
         }
 
     }
@@ -368,11 +377,14 @@ TEST(MyStringIO, ReadAfterEOF) {
             MyString s3 = readBinObject(in);
             FAIL() << "Expected runtime error";
         }
-        catch (std::exception& e) {
+        catch (std::runtime_error& e) {
             EXPECT_STREQ(e.what(), "MyString::rBin:runtime_error input stream is empty");
         }
+        catch (std::exception& e) {
+            FAIL() << "Expected runtime_error, but got: " << e.what();
+        }
         catch (...) {
-            FAIL() << "Expected runtime error, but got another exception";
+            FAIL() << "Expected runtime error, but got unknown exception";
         }
 
     }
