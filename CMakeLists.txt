@@ -16,7 +16,6 @@ add_executable(myownlab
         Tree.cpp
         Tree.h
         TreeTemplate.h
-        StlAnalysis.h
 )
 
 # ==== GoogleTest ====
@@ -37,6 +36,7 @@ add_executable(run_tests
         tests/dataoctstring_test.cpp
         tests/treetemplate_test.cpp
         tests/tree_test.cpp
+        tests/stlanalysis_test.cpp
         MyString.cpp
         MyString.h
         OctString.cpp
@@ -46,6 +46,7 @@ add_executable(run_tests
         Tree.cpp
         Tree.h
         TreeTemplate.h
+        tests/stlanalysis_test.cpp
 
 
 )
